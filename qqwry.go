@@ -82,6 +82,7 @@ func QueryIP(queryIp string) (country string, area string, err error) {
 		}
 	}
 	if offset <= 0 {
+		err = errors.New("ip not found")
 		return
 	}
 	posM := offset + 4
