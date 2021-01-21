@@ -18,8 +18,8 @@ func main() {
 		panic(err)
 	}
 	// 从内存或缓存查询IP
-	country, area, err := qqwry.QueryIP("1.1.1.1")
-	log.Printf("国家：%s，区域：%s，错误：%v", country, area, err)
+	city, area, err := qqwry.QueryIP("1.1.1.1")
+	log.Printf("城市：%s，区域：%s，错误：%v", city, area, err)
 }
 ```
 
