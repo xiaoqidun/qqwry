@@ -1,4 +1,4 @@
-# QQWry[![Go Reference](https://pkg.go.dev/badge/github.com/xiaoqidun/qqwry.svg)](https://pkg.go.dev/github.com/xiaoqidun/qqwry)
+# QQWry [![Go Reference](https://pkg.go.dev/badge/github.com/xiaoqidun/qqwry.svg)](https://pkg.go.dev/github.com/xiaoqidun/qqwry)
 
 Golang QQWry，内存操作，线程安全，支持缓存的纯真IP查询库
 
