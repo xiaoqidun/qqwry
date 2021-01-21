@@ -25,8 +25,8 @@ func main() {
 
 # 特别感谢
 
-- 感谢[纯真IP库](https://www.cz88.net/)一直坚持为大家提供免费IP数据库
-- 感谢[yinheli](https://github.com/yinheli)的[qqwry](https://github.com/yinheli/qqwry)项目，为我提供纯真ip库解析算法参考
+- 感谢[纯真IP库](https://www.cz88.net/)一直坚持为大家提供免费IP数据库。
+- 感谢[yinheli](https://github.com/yinheli)的[qqwry](https://github.com/yinheli/qqwry)项目，为我提供纯真ip库解析算法参考。
 
 # 授权说明
 
