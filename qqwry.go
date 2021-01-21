@@ -2,7 +2,6 @@ package qqwry
 
 import (
 	"bytes"
-	_ "embed"
 	"encoding/binary"
 	"errors"
 	"golang.org/x/text/encoding/simplifiedchinese"
