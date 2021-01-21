@@ -1,6 +1,6 @@
 # QQWry [![Go Reference](https://pkg.go.dev/badge/github.com/xiaoqidun/qqwry.svg)](https://pkg.go.dev/github.com/xiaoqidun/qqwry)
 
-Golang QQWry，高性能纯真IP查询库
+Golang QQWry，高性能纯真IP查询库。
 
 # 使用须知
 
