@@ -24,8 +24,8 @@ const (
 )
 
 type cache struct {
-	Country string
-	Area    string
+	City string
+	Area string
 }
 
 func byte3ToUInt32(data []byte) uint32 {
@@ -43,9 +43,9 @@ func gb18030Decode(src []byte) string {
 }
 
 // QueryIP 从内存或缓存查询IP
-func QueryIP(queryIp string) (country string, area string, err error) {
+func QueryIP(queryIp string) (city string, area string, err error) {
 	if v, ok := ipCache.Load(queryIp); ok {
-		country = v.(cache).Country
+		city = v.(cache).City
 		area = v.(cache).Area
 		return
 	}
@@ -99,19 +99,19 @@ func QueryIP(queryIp string) (country string, area string, err error) {
 		}
 		for i := posCA; i < dataLen; i++ {
 			if data[i] == 0 {
-				country = string(data[posCA:i])
+				city = string(data[posCA:i])
 				break
 			}
 		}
 		if mode != redirectMode2 {
-			posC += uint32(len(country) + 1)
+			posC += uint32(len(city) + 1)
 		}
 		areaPos = posC
 	case redirectMode2:
 		posCA := byte3ToUInt32(data[posM+1 : posM+4])
 		for i := posCA; i < dataLen; i++ {
 			if data[i] == 0 {
-				country = string(data[posCA:i])
+				city = string(data[posCA:i])
 				break
 			}
 		}
@@ -120,11 +120,11 @@ func QueryIP(queryIp string) (country string, area string, err error) {
 		posCA := offset + 4
 		for i := posCA; i < dataLen; i++ {
 			if data[i] == 0 {
-				country = string(data[posCA:i])
+				city = string(data[posCA:i])
 				break
 			}
 		}
-		areaPos = offset + uint32(5+len(country))
+		areaPos = offset + uint32(5+len(city))
 	}
 	areaMode := data[areaPos]
 	if areaMode == redirectMode1 || areaMode == redirectMode2 {
@@ -138,9 +138,9 @@ func QueryIP(queryIp string) (country string, area string, err error) {
 			}
 		}
 	}
-	country = gb18030Decode([]byte(country))
+	city = gb18030Decode([]byte(city))
 	area = gb18030Decode([]byte(area))
-	ipCache.Store(queryIp, cache{Country: country, Area: area})
+	ipCache.Store(queryIp, cache{City: city, Area: area})
 	return
 }
 

@@ -12,9 +12,9 @@ func init() {
 
 func TestQueryIP(t *testing.T) {
 	queryIp := "1.1.1.1"
-	country, area, err := QueryIP(queryIp)
+	city, area, err := QueryIP(queryIp)
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(country, area)
+	t.Logf("城市：%s，区域：%s", city, area)
 }
