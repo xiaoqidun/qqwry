@@ -91,14 +91,14 @@ func QueryIP(queryIp string) (country string, area string, err error) {
 	case redirectMode1:
 		posC := byte3ToUInt32(data[posM+1 : posM+4])
 		mode = data[posC]
-		var cA uint32 = 0
+		posCA := posC
 		if mode == redirectMode2 {
-			cA = byte3ToUInt32(data[posC+1 : posC+4])
+			posCA = byte3ToUInt32(data[posC+1 : posC+4])
 			posC += 4
 		}
-		for i := cA; i < dataLen; i++ {
+		for i := posCA; i < dataLen; i++ {
 			if data[i] == 0 {
-				country = string(data[cA:i])
+				country = string(data[posCA:i])
 				break
 			}
 		}
@@ -107,19 +107,19 @@ func QueryIP(queryIp string) (country string, area string, err error) {
 		}
 		areaPos = posC
 	case redirectMode2:
-		cA := byte3ToUInt32(data[posM+1 : posM+4])
-		for i := cA; i < dataLen; i++ {
+		posCA := byte3ToUInt32(data[posM+1 : posM+4])
+		for i := posCA; i < dataLen; i++ {
 			if data[i] == 0 {
-				country = string(data[cA:i])
+				country = string(data[posCA:i])
 				break
 			}
 		}
 		areaPos = offset + 8
 	default:
-		cA := offset + 4
-		for i := cA; i < dataLen; i++ {
+		posCA := offset + 4
+		for i := posCA; i < dataLen; i++ {
 			if data[i] == 0 {
-				country = string(data[cA:i])
+				country = string(data[posCA:i])
 				break
 			}
 		}
