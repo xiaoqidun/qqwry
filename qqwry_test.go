@@ -5,7 +5,7 @@ import (
 )
 
 func init() {
-	if err := LoadFile("qqwry.dat"); err != nil {
+	if err := LoadFile("assets/qqwry.dat"); err != nil {
 		panic(err)
 	}
 }

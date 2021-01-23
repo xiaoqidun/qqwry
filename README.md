@@ -33,6 +33,18 @@ func main() {
 
 - [https://aite.xyz/share-file/qqwry/qqwry.dat](https://aite.xyz/share-file/qqwry/qqwry.dat)
 
+# 编译说明
+
+1. 下载IP数据库并放置于assets目录中。
+2. client和server需要go1.16的内嵌资源特性。
+3. 作为库使用，请直接引包，并不需要go1.16+才能编译。
+
+# 服务接口
+
+1. 自行根据需要调整server下源码。
+2. 可以通过-listen参数指定http服务地址。
+3. curl http://127.0.0.1/ip/1.1.1.1
+
 # 特别感谢
 
 - 感谢[纯真IP库](https://www.cz88.net/)一直坚持为大家提供免费IP数据库。
