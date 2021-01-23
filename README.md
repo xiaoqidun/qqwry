@@ -43,7 +43,7 @@ func main() {
 
 1. 自行根据需要调整server下源码。
 2. 可以通过-listen参数指定http服务地址。
-3. curl http://127.0.0.1/ip/1.1.1.1
+3. json api：curl http://127.0.0.1/ip/1.1.1.1。
 
 # 特别感谢
 
