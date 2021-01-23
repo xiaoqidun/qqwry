@@ -29,6 +29,10 @@ func main() {
 }
 ```
 
+# IP数据库
+
+- [https://aite.xyz/share-file/qqwry/qqwry.dat](https://aite.xyz/share-file/qqwry/qqwry.dat)
+
 # 特别感谢
 
 - 感谢[纯真IP库](https://www.cz88.net/)一直坚持为大家提供免费IP数据库。
