@@ -141,6 +141,7 @@ func QueryIP(queryIp string) (city string, area string, err error) {
 	}
 	city = strings.TrimSpace(gb18030Decode([]byte(city)))
 	area = strings.TrimSpace(gb18030Decode([]byte(area)))
+	area = strings.ReplaceAll(area, "CZ88.NET", "")
 	ipCache.Store(queryIp, cache{City: city, Area: area})
 	return
 }
