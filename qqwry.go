@@ -8,6 +8,7 @@ import (
 	"golang.org/x/text/transform"
 	"io/ioutil"
 	"net"
+	"strings"
 	"sync"
 )
 
@@ -138,8 +139,8 @@ func QueryIP(queryIp string) (city string, area string, err error) {
 			}
 		}
 	}
-	city = gb18030Decode([]byte(city))
-	area = gb18030Decode([]byte(area))
+	city = strings.TrimSpace(gb18030Decode([]byte(city)))
+	area = strings.TrimSpace(gb18030Decode([]byte(area)))
 	ipCache.Store(queryIp, cache{City: city, Area: area})
 	return
 }
