@@ -26,7 +26,7 @@ const (
 
 type cache struct {
 	City string
-	Area string
+	Isp  string
 }
 
 func byte3ToUInt32(data []byte) uint32 {
@@ -44,10 +44,10 @@ func gb18030Decode(src []byte) string {
 }
 
 // QueryIP 从内存或缓存查询IP
-func QueryIP(queryIp string) (city string, area string, err error) {
+func QueryIP(queryIp string) (city string, isp string, err error) {
 	if v, ok := ipCache.Load(queryIp); ok {
 		city = v.(cache).City
-		area = v.(cache).Area
+		isp = v.(cache).Isp
 		return
 	}
 	ip := net.ParseIP(queryIp).To4()
@@ -88,7 +88,7 @@ func QueryIP(queryIp string) (city string, area string, err error) {
 	}
 	posM := offset + 4
 	mode := data[posM]
-	var areaPos uint32
+	var ispPos uint32
 	switch mode {
 	case redirectMode1:
 		posC := byte3ToUInt32(data[posM+1 : posM+4])
@@ -107,7 +107,7 @@ func QueryIP(queryIp string) (city string, area string, err error) {
 		if mode != redirectMode2 {
 			posC += uint32(len(city) + 1)
 		}
-		areaPos = posC
+		ispPos = posC
 	case redirectMode2:
 		posCA := byte3ToUInt32(data[posM+1 : posM+4])
 		for i := posCA; i < dataLen; i++ {
@@ -116,7 +116,7 @@ func QueryIP(queryIp string) (city string, area string, err error) {
 				break
 			}
 		}
-		areaPos = offset + 8
+		ispPos = offset + 8
 	default:
 		posCA := offset + 4
 		for i := posCA; i < dataLen; i++ {
@@ -125,31 +125,31 @@ func QueryIP(queryIp string) (city string, area string, err error) {
 				break
 			}
 		}
-		areaPos = offset + uint32(5+len(city))
-	}
-	areaMode := data[areaPos]
-	if areaMode == redirectMode1 || areaMode == redirectMode2 {
-		areaPos = byte3ToUInt32(data[areaPos+1 : areaPos+4])
-	}
-	if areaPos > 0 {
-		for i := areaPos; i < dataLen; i++ {
-			if data[i] == 0 {
-				area = string(data[areaPos:i])
-				break
-			}
-		}
+		ispPos = offset + uint32(5+len(city))
 	}
 	if city != "" {
 		city = strings.TrimSpace(gb18030Decode([]byte(city)))
 	}
-	if area != "" {
-		if strings.Contains(area, "CZ88.NET") {
-			area = ""
-		} else {
-			area = strings.TrimSpace(gb18030Decode([]byte(area)))
+	ispMode := data[ispPos]
+	if ispMode == redirectMode1 || ispMode == redirectMode2 {
+		ispPos = byte3ToUInt32(data[ispPos+1 : ispPos+4])
+	}
+	if ispPos > 0 {
+		for i := ispPos; i < dataLen; i++ {
+			if data[i] == 0 {
+				isp = string(data[ispPos:i])
+				if isp != "" {
+					if strings.Contains(isp, "CZ88.NET") {
+						isp = ""
+					} else {
+						isp = strings.TrimSpace(gb18030Decode([]byte(isp)))
+					}
+				}
+				break
+			}
 		}
 	}
-	ipCache.Store(queryIp, cache{City: city, Area: area})
+	ipCache.Store(queryIp, cache{City: city, Isp: isp})
 	return
 }
 

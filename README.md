@@ -5,8 +5,7 @@ Golang QQWry，高性能纯真IP查询库。
 # 使用须知
 
 1. 仅支持ipv4查询。
-2. city可能是城市，也可能是国家。
-3. area可能是区域，也可能是运营商。
+2. city可能是国家。
 
 # 使用说明
 
@@ -24,8 +23,8 @@ func main() {
 		panic(err)
 	}
 	// 从内存或缓存查询IP
-	city, area, err := qqwry.QueryIP("1.1.1.1")
-	log.Printf("城市：%s，区域：%s，错误：%v", city, area, err)
+	city, isp, err := qqwry.QueryIP("1.1.1.1")
+	log.Printf("城市：%s，运营商：%s，错误：%v", city, isp, err)
 }
 ```
 

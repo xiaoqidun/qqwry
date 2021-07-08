@@ -13,7 +13,7 @@ type resp struct {
 	IP   string `json:"ip"`
 	Err  string `json:"err"`
 	City string `json:"city"`
-	Area string `json:"area"`
+	Isp  string `json:"isp"`
 }
 
 func init() {
@@ -35,12 +35,12 @@ func IpAPI(writer http.ResponseWriter, request *http.Request) {
 		ip, _, _ = net.SplitHostPort(request.RemoteAddr)
 	}
 	rw := &resp{IP: ip}
-	city, area, err := qqwry.QueryIP(ip)
+	city, isp, err := qqwry.QueryIP(ip)
 	if err != nil {
 		rw.Err = err.Error()
 	} else {
 		rw.City = city
-		rw.Area = area
+		rw.Isp = isp
 	}
 	b, _ := json.MarshalIndent(rw, "", "    ")
 	_, _ = writer.Write(b)
