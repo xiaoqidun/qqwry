@@ -6,8 +6,9 @@ import (
 	"errors"
 	"golang.org/x/text/encoding/simplifiedchinese"
 	"golang.org/x/text/transform"
-	"io/ioutil"
+	"io"
 	"net"
+	"os"
 	"strings"
 	"sync"
 )
@@ -39,7 +40,7 @@ func byte3ToUInt32(data []byte) uint32 {
 func gb18030Decode(src []byte) string {
 	in := bytes.NewReader(src)
 	out := transform.NewReader(in, simplifiedchinese.GB18030.NewDecoder())
-	d, _ := ioutil.ReadAll(out)
+	d, _ := io.ReadAll(out)
 	return string(d)
 }
 
@@ -161,7 +162,7 @@ func LoadData(database []byte) {
 
 // LoadFile 从文件加载IP数据库
 func LoadFile(filepath string) (err error) {
-	data, err = ioutil.ReadFile(filepath)
+	data, err = os.ReadFile(filepath)
 	if err != nil {
 		return
 	}
