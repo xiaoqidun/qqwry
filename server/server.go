@@ -10,10 +10,9 @@ import (
 )
 
 type resp struct {
-	IP   string `json:"ip"`
-	Err  string `json:"err"`
-	City string `json:"city"`
-	Isp  string `json:"isp"`
+	Data    *qqwry.Location `json:"data"`
+	Success bool            `json:"success"`
+	Message string          `json:"message"`
 }
 
 func init() {
@@ -34,14 +33,14 @@ func IpAPI(writer http.ResponseWriter, request *http.Request) {
 	if ip == "" {
 		ip, _, _ = net.SplitHostPort(request.RemoteAddr)
 	}
-	rw := &resp{IP: ip}
-	city, isp, err := qqwry.QueryIP(ip)
+	write := &resp{}
+	location, err := qqwry.QueryIP(ip)
 	if err != nil {
-		rw.Err = err.Error()
+		write.Message = err.Error()
 	} else {
-		rw.City = city
-		rw.Isp = isp
+		write.Data = location
+		write.Success = true
 	}
-	b, _ := json.MarshalIndent(rw, "", "    ")
+	b, _ := json.MarshalIndent(write, "", "    ")
 	_, _ = writer.Write(b)
 }

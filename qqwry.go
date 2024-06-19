@@ -14,9 +14,9 @@ import (
 )
 
 var (
-	data    []byte
-	dataLen uint32
-	ipCache = &sync.Map{}
+	data          []byte
+	dataLen       uint32
+	locationCache = &sync.Map{}
 )
 
 const (
@@ -25,9 +25,13 @@ const (
 	redirectMode2 = 0x02
 )
 
-type cache struct {
-	City string
-	Isp  string
+type Location struct {
+	Country  string // 国家
+	Province string // 省份
+	City     string // 城市
+	District string // 区县
+	ISP      string // 运营商
+	IP       string // IP地址
 }
 
 func byte3ToUInt32(data []byte) uint32 {
@@ -45,16 +49,13 @@ func gb18030Decode(src []byte) string {
 }
 
 // QueryIP 从内存或缓存查询IP
-func QueryIP(queryIp string) (city string, isp string, err error) {
-	if v, ok := ipCache.Load(queryIp); ok {
-		city = v.(cache).City
-		isp = v.(cache).Isp
-		return
+func QueryIP(ipv4 string) (location *Location, err error) {
+	if v, ok := locationCache.Load(ipv4); ok {
+		return v.(*Location), nil
 	}
-	ip := net.ParseIP(queryIp).To4()
+	ip := net.ParseIP(ipv4).To4()
 	if ip == nil {
-		err = errors.New("ip is not ipv4")
-		return
+		return nil, errors.New("ip is not ipv4")
 	}
 	ip32 := binary.BigEndian.Uint32(ip)
 	posA := binary.LittleEndian.Uint32(data[:4])
@@ -84,12 +85,12 @@ func QueryIP(queryIp string) (city string, isp string, err error) {
 		}
 	}
 	if offset <= 0 {
-		err = errors.New("ip not found")
-		return
+		return nil, errors.New("ip not found")
 	}
 	posM := offset + 4
 	mode := data[posM]
 	var ispPos uint32
+	var addr, isp string
 	switch mode {
 	case redirectMode1:
 		posC := byte3ToUInt32(data[posM+1 : posM+4])
@@ -101,19 +102,19 @@ func QueryIP(queryIp string) (city string, isp string, err error) {
 		}
 		for i := posCA; i < dataLen; i++ {
 			if data[i] == 0 {
-				city = string(data[posCA:i])
+				addr = string(data[posCA:i])
 				break
 			}
 		}
 		if mode != redirectMode2 {
-			posC += uint32(len(city) + 1)
+			posC += uint32(len(addr) + 1)
 		}
 		ispPos = posC
 	case redirectMode2:
 		posCA := byte3ToUInt32(data[posM+1 : posM+4])
 		for i := posCA; i < dataLen; i++ {
 			if data[i] == 0 {
-				city = string(data[posCA:i])
+				addr = string(data[posCA:i])
 				break
 			}
 		}
@@ -122,14 +123,14 @@ func QueryIP(queryIp string) (city string, isp string, err error) {
 		posCA := offset + 4
 		for i := posCA; i < dataLen; i++ {
 			if data[i] == 0 {
-				city = string(data[posCA:i])
+				addr = string(data[posCA:i])
 				break
 			}
 		}
-		ispPos = offset + uint32(5+len(city))
+		ispPos = offset + uint32(5+len(addr))
 	}
-	if city != "" {
-		city = strings.TrimSpace(gb18030Decode([]byte(city)))
+	if addr != "" {
+		addr = strings.TrimSpace(gb18030Decode([]byte(addr)))
 	}
 	ispMode := data[ispPos]
 	if ispMode == redirectMode1 || ispMode == redirectMode2 {
@@ -150,8 +151,9 @@ func QueryIP(queryIp string) (city string, isp string, err error) {
 			}
 		}
 	}
-	ipCache.Store(queryIp, cache{City: city, Isp: isp})
-	return
+	location = SplitResult(addr, isp, ipv4)
+	locationCache.Store(ipv4, location)
+	return location, nil
 }
 
 // LoadData 从内存加载IP数据库
@@ -167,5 +169,24 @@ func LoadFile(filepath string) (err error) {
 		return
 	}
 	dataLen = uint32(len(data))
+	return
+}
+
+// SplitResult 按照调整后的纯真社区版IP库地理位置格式返回结果
+func SplitResult(addr string, isp string, ipv4 string) (location *Location) {
+	location = &Location{ISP: isp, IP: ipv4}
+	splitList := strings.Split(addr, "–")
+	for i := 0; i < len(splitList); i++ {
+		switch i {
+		case 0:
+			location.Country = splitList[i]
+		case 1:
+			location.Province = splitList[i]
+		case 2:
+			location.City = splitList[i]
+		case 3:
+			location.District = splitList[i]
+		}
+	}
 	return
 }

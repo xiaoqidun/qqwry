@@ -11,10 +11,22 @@ func init() {
 }
 
 func TestQueryIP(t *testing.T) {
-	queryIp := "1.1.1.1"
-	city, isp, err := QueryIP(queryIp)
+	queryIp := "119.29.29.29"
+	location, err := QueryIP(queryIp)
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Logf("城市：%s，运营商：%s", city, isp)
+	emptyVal := func(val string) string {
+		if val != "" {
+			return val
+		}
+		return "未知"
+	}
+	t.Logf("国家：%s，省份：%s，城市：%s，区县：%s，运营商：%s",
+		emptyVal(location.Country),
+		emptyVal(location.Province),
+		emptyVal(location.City),
+		emptyVal(location.District),
+		emptyVal(location.ISP),
+	)
 }

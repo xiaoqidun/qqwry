@@ -5,7 +5,6 @@ Golang QQWry，高性能纯真IP查询库。
 # 使用须知
 
 1. 仅支持ipv4查询。
-2. city也可能是国家。
 
 # 使用说明
 
@@ -13,8 +12,8 @@ Golang QQWry，高性能纯真IP查询库。
 package main
 
 import (
+	"fmt"
 	"github.com/xiaoqidun/qqwry"
-	"log"
 )
 
 func main() {
@@ -23,8 +22,18 @@ func main() {
 		panic(err)
 	}
 	// 从内存或缓存查询IP
-	city, isp, err := qqwry.QueryIP("1.1.1.1")
-	log.Printf("城市：%s，运营商：%s，错误：%v", city, isp, err)
+	location, err := qqwry.QueryIP("119.29.29.29")
+	if err != nil {
+		fmt.Printf("错误：%v\n", err)
+		return
+	}
+	fmt.Printf("国家：%s，省份：%s，城市：%s，区县：%s，运营商：%s\n",
+		location.Country,
+		location.Province,
+		location.City,
+		location.District,
+		location.ISP,
+	)
 }
 ```
 
@@ -42,7 +51,7 @@ func main() {
 
 1. 自行根据需要调整server下源码。
 2. 可以通过-listen参数指定http服务地址。
-3. json api：curl http://127.0.0.1/ip/1.1.1.1
+3. json api：curl http://127.0.0.1/ip/119.29.29.29
 
 # 特别感谢
 
