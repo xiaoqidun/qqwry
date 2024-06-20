@@ -33,14 +33,14 @@ func IpAPI(writer http.ResponseWriter, request *http.Request) {
 	if ip == "" {
 		ip, _, _ = net.SplitHostPort(request.RemoteAddr)
 	}
-	write := &resp{}
+	response := &resp{}
 	location, err := qqwry.QueryIP(ip)
 	if err != nil {
-		write.Message = err.Error()
+		response.Message = err.Error()
 	} else {
-		write.Data = location
-		write.Success = true
+		response.Data = location
+		response.Success = true
 	}
-	b, _ := json.MarshalIndent(write, "", "    ")
+	b, _ := json.MarshalIndent(response, "", "  ")
 	_, _ = writer.Write(b)
 }
