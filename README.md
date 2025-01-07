@@ -19,7 +19,7 @@ import (
 
 func main() {
 	// 从文件加载IP数据库
-	if err := qqwry.LoadFile("qqwry.dat"); err != nil {
+	if err := qqwry.LoadFile("qqwry.ipdb"); err != nil {
 		panic(err)
 	}
 	// 从内存或缓存查询IP
