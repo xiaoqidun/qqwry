@@ -183,6 +183,9 @@ func QueryIPIpdb(ip string) (location *Location, err error) {
 		return
 	}
 	location = SplitResult(ret[0], ret[1], ip)
+	if location.Country == "局域网" {
+		location.ISP = location.Country
+	}
 	locationCache.Store(ip, location)
 	return location, nil
 }
