@@ -4,7 +4,8 @@ Golang QQWry，高性能纯真IP查询库。
 
 # 使用须知
 
-1. 仅支持ipv4查询。
+1. dat格式仅支持ipv4查询。
+2. ipdb格式支持ipv4和ipv6查询。
 
 # 使用说明
 
