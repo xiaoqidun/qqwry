@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"errors"
+	"github.com/ipipdotnet/ipdb-go"
 	"golang.org/x/text/encoding/simplifiedchinese"
 	"golang.org/x/text/transform"
 	"io"
@@ -16,7 +17,14 @@ import (
 var (
 	data          []byte
 	dataLen       uint32
+	ipdbCity      *ipdb.City
+	dataType      = dataTypeDat
 	locationCache = &sync.Map{}
+)
+
+const (
+	dataTypeDat  = 0
+	dataTypeIpdb = 1
 )
 
 const (
@@ -49,10 +57,22 @@ func gb18030Decode(src []byte) string {
 }
 
 // QueryIP 从内存或缓存查询IP
-func QueryIP(ipv4 string) (location *Location, err error) {
-	if v, ok := locationCache.Load(ipv4); ok {
+func QueryIP(ip string) (location *Location, err error) {
+	if v, ok := locationCache.Load(ip); ok {
 		return v.(*Location), nil
 	}
+	switch dataType {
+	case dataTypeDat:
+		return QueryIPDat(ip)
+	case dataTypeIpdb:
+		return QueryIPIpdb(ip)
+	default:
+		return nil, errors.New("data type not support")
+	}
+}
+
+// QueryIPDat 从dat查询IP，仅加载dat格式数据库时使用
+func QueryIPDat(ipv4 string) (location *Location, err error) {
 	ip := net.ParseIP(ipv4).To4()
 	if ip == nil {
 		return nil, errors.New("ip is not ipv4")
@@ -156,19 +176,39 @@ func QueryIP(ipv4 string) (location *Location, err error) {
 	return location, nil
 }
 
+// QueryIPIpdb 从ipdb查询IP，仅加载ipdb格式数据库时使用
+func QueryIPIpdb(ip string) (location *Location, err error) {
+	ret, err := ipdbCity.Find(ip, "CN")
+	if err != nil {
+		return
+	}
+	location = SplitResult(ret[0], ret[1], ip)
+	locationCache.Store(ip, location)
+	return location, nil
+}
+
 // LoadData 从内存加载IP数据库
 func LoadData(database []byte) {
+	if string(database[6:11]) == "build" {
+		dataType = dataTypeIpdb
+		loadCity, err := ipdb.NewCityFromBytes(database)
+		if err != nil {
+			panic(err)
+		}
+		ipdbCity = loadCity
+		return
+	}
 	data = database
 	dataLen = uint32(len(data))
 }
 
 // LoadFile 从文件加载IP数据库
 func LoadFile(filepath string) (err error) {
-	data, err = os.ReadFile(filepath)
+	body, err := os.ReadFile(filepath)
 	if err != nil {
 		return
 	}
-	dataLen = uint32(len(data))
+	LoadData(body)
 	return
 }
 

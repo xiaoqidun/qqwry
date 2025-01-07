@@ -39,13 +39,19 @@ func main() {
 
 # IP数据库
 
-- [https://aite.xyz/share-file/qqwry/qqwry.dat](https://aite.xyz/share-file/qqwry/qqwry.dat)
+- DAT格式：[https://aite.xyz/share-file/qqwry/qqwry.dat](https://aite.xyz/share-file/qqwry/qqwry.dat)
+- IPDB格式：[https://aite.xyz/share-file/qqwry/qqwry.ipdb](https://aite.xyz/share-file/qqwry/qqwry.ipdb)
 
 # 编译说明
 
 1. 下载IP数据库并放置于assets目录中。
 2. client和server需要go1.16的内嵌资源特性。
 3. 作为库使用，请直接引包，并不需要go1.16+才能编译。
+
+# 数据更新
+
+- 由于qqwry.dat缺乏更新，官方czdb格式又难以获得和分发，建议使用ipdb格式。
+- 这里的ipdb格式指metowolf提供的官方czdb格式转换而来的ipdb格式（纯真格式原版）。
 
 # 服务接口
 
@@ -57,6 +63,7 @@ func main() {
 
 - 感谢[纯真IP库](https://www.cz88.net/)一直坚持为大家提供免费IP数据库。
 - 感谢[yinheli](https://github.com/yinheli)的[qqwry](https://github.com/yinheli/qqwry)项目，为我提供纯真ip库解析算法参考。
+- 感谢[metowolf](https://github.com/metowolf)的[qqwry.ipdb](https://github.com/metowolf/qqwry.ipdb)项目，提供纯真czdb转ipdb数据库。
 
 # 授权说明
 

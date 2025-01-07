@@ -16,7 +16,7 @@ type resp struct {
 }
 
 func init() {
-	qqwry.LoadData(assets.QQWryDat)
+	qqwry.LoadData(assets.QQWryIpdb)
 }
 
 func main() {
