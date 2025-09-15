@@ -4,5 +4,5 @@ go 1.20
 
 require (
 	github.com/ipipdotnet/ipdb-go v1.3.3
-	golang.org/x/text v0.27.0
+	golang.org/x/text v0.29.0
 )
