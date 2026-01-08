@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/xiaoqidun/qqwry"
 	"github.com/xiaoqidun/qqwry/assets"
-	"os"
 )
 
 func init() {

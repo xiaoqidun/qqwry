@@ -3,10 +3,11 @@ package main
 import (
 	"encoding/json"
 	"flag"
-	"github.com/xiaoqidun/qqwry"
-	"github.com/xiaoqidun/qqwry/assets"
 	"net"
 	"net/http"
+
+	"github.com/xiaoqidun/qqwry"
+	"github.com/xiaoqidun/qqwry/assets"
 )
 
 type resp struct {
