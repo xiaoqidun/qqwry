@@ -1,8 +1,8 @@
 module github.com/xiaoqidun/qqwry
 
-go 1.20
+go 1.24.0
 
 require (
 	github.com/ipipdotnet/ipdb-go v1.3.3
-	golang.org/x/text v0.32.0
+	golang.org/x/text v0.33.0
 )
