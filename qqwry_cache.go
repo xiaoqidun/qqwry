@@ -12,7 +12,7 @@ type cacheEntry struct {
 }
 
 // Cache 简单的LRU缓存实现
-// 字段: capacity 容量, list 双向链表, items哈希表, lock 互斥锁
+// 字段: capacity 容量, list 双向链表, items 哈希表, lock 互斥锁
 type Cache struct {
 	capacity int
 	list     *list.List

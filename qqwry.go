@@ -69,7 +69,7 @@ func (c *Client) QueryIP(ip string) (location *Location, err error) {
 		return nil, errors.New("data type not support")
 	}
 	if err == nil && location != nil {
-		c.cache.Add(ip, location)
+		c.cache.Add(ip, location.Clone())
 	}
 	return location, err
 }

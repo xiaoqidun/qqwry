@@ -18,7 +18,7 @@ const (
 
 // byte3ToUInt32 将3字节切片转换为uint32
 // 入参: data 3字节切片
-// 返回: uint32转换后的值
+// 返回: uint32 转换后的值
 func byte3ToUInt32(data []byte) uint32 {
 	i := uint32(data[0]) & 0xff
 	i |= (uint32(data[1]) << 8) & 0xff00
